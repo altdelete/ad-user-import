@@ -60,3 +60,4 @@ foreach ($remainingAdUser in $adUsersLookup.Values) {
         Remove-ADGroupMember -Identity "GL-SEC-Users-FE" -Members $username
     }
 }
+
