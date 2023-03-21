@@ -41,7 +41,7 @@ foreach ($csvUser in $csvUsers) {
         Write-Host "User $username exists in Active Directory."
     }
     else {
-        Write-Host "Creating user $username in Active Directory..."
+        Write-Host "Creating user $username in Active Directory & assigning licenses..."
         $securePassword = ConvertTo-SecureString -String $password -AsPlainText -Force
         New-ADUser -Name $displayName -DisplayName $displayName -SamAccountName $username -UserPrincipalName $upn -GivenName $firstName -Surname $lastName -Title $jobTitle -Department $department -Enabled $True -AccountPassword $(ConvertTo-SecureString $password -AsPlainText -Force) -Path "OU=FE,OU=Pretendco Users,DC=corp,DC=pretendco,DC=com"
         Add-ADGroupMember -Identity "GL-SEC-Azure-Lic" -Members $username
@@ -54,7 +54,9 @@ foreach ($csvUser in $csvUsers) {
 # Disable remaining users in the hashtable
 foreach ($remainingAdUser in $adUsersLookup.Values) {
     if ($remainingAdUser.Enabled -eq $true) {
-        Write-Host "Disabling user $($remainingAdUser.SamAccountName) in Active Directory..."
+        Write-Host "Disabling user $($remainingAdUser.SamAccountName) & removing active licenses..."
         Set-ADUser -Identity $remainingAdUser -Enabled $false
+        Remove-ADGroupMember -Identity "GL-SEC-Azure-Lic" -Members $username
+        Remove-ADGroupMember -Identity "GL-SEC-Users-FE" -Members $username
     }
 }
