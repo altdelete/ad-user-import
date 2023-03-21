@@ -1,6 +1,8 @@
 # Overview:
  The following scripts will query an Apple Directory group of your choosing, and generates a csv template that can be used to create and/or update (or disable) the DemoKit on-prem Active Directory user objects.
 
+The import_users script will also assign or un-assign licenses accordingly.
+
 ## Usage
 
 `export.sh`
